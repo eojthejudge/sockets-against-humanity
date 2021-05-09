@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <AppHeader/>
+    <button v-on:click="sendMessage()">Login Bob</button>
     <AppFooter/>
   </div>
 </template>
@@ -15,6 +16,11 @@ export default {
     AppHeader,
     AppFooter
   },
+  data: function() {
+    return {
+      connection: null
+    }
+  },
   created: function() {
     console.log("Starting connection to WebSocket Server")
     this.connection = new WebSocket("ws://localhost:9502")
@@ -27,7 +33,15 @@ export default {
       console.log(event)
       console.log("Successfully connected to the echo websocket server...")
     }
-  }
+  },
+  methods: {
+    sendMessage: function() {
+      console.log(this.connection);
+      this.connection.send(JSON.stringify({
+        user: 'Bob'
+      }));
+    }
+  },
 }
 </script>
 
