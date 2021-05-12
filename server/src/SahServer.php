@@ -23,6 +23,7 @@ class SahServer
 
         $this->connections = new Table(1024);
         $this->connections->column('client', Table::TYPE_INT, 4);
+        $this->connections->column('username', Table::TYPE_STRING, 64);
         $this->connections->create();
         
         $server = new Server("0.0.0.0", 9502);
@@ -41,11 +42,20 @@ class SahServer
 
         $server->on('message', function (Server $server, Frame $frame) {
             $this->logger->info("received message: {$frame->data}");
+            $dataArray = json_decode($frame->data);
+            $this->logger->debug('Received: ', array($dataArray));
+            if ($dataArray && !empty($dataArray->user)) {
+                $this->connections->set($frame->fd, ['username' => $dataArray->user]);
+            }
             $server->push($frame->fd, json_encode(["hello", time()]));
         });
 
         $server->on('close', function (Server $server, int $fd) {
             $this->logger->info("connection close: {$fd}");
+            $userName = $this->connections->get($fd, 'username');
+            if (!empty($userName)) {
+                $this->logger->info($userName . ' has left the game');
+            }
             // remove the client from the memory table
             $this->connections->del($fd);
             $this->logger->info("We have " . $this->connections->count() . " connections active");
