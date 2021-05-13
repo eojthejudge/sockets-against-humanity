@@ -9,8 +9,13 @@ Websocket card game trying out Swoole PHP and Vue.js
 * Npm
 * Swoole extension for PHP
 * Composer
+* libpq-dev
+* Swoole postgresql extension at https://github.com/swoole/ext-postgresql
 
 ### Server
+
+Copy cards data as json from https://www.crhallberg.com/cah/ in server/data/cah-cards.json
+Download the compact format
 
 ```
 cd server

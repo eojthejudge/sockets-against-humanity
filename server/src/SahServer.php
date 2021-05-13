@@ -14,6 +14,7 @@ class SahServer
     private $server;
     private $logger;
     private $connections;
+    private $whiteCards;
 
     public function __construct()
     {
@@ -25,6 +26,12 @@ class SahServer
         $this->connections->column('client', Table::TYPE_INT, 4);
         $this->connections->column('username', Table::TYPE_STRING, 64);
         $this->connections->create();
+        $this->whiteCards = new Table(2048);
+        $this->whiteCards->column('id', Table::TYPE_INT, 8);
+        $this->whiteCards->column('text', Table::TYPE_STRING, 128);
+        $this->whiteCards->create();
+
+        $this->initData();
         
         $server = new Server("0.0.0.0", 9502);
         $this->server = $server;
@@ -65,5 +72,16 @@ class SahServer
     public function start()
     {
         $this->server->start();
+    }
+
+    public function initData() : void
+    {
+        $dataString = file_get_contents(__DIR__ . "/../data/cah-cards.json");
+        $dataJson = json_decode($dataString);
+
+        foreach($dataJson->white as $key => $whiteCard) {
+            $this->whiteCards->set($key, ['id' => $key, 'text' => $whiteCard]);
+        }
+        $this->logger->info("Imported " . $this->whiteCards->count() . " from data/cah-cards.json");
     }
 }

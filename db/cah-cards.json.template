@@ -1,0 +1,16 @@
+{
+  "white": ["Answer cards in plain text, formatted with **Markdown**"],
+  "black": [
+    { "text": "_Prompt_ cards\nformatted with _.", "pick": 1 },
+    { "text": "I want a _ **and** _ sandwich! No corners!", "pick": 2 }
+  ],
+  "packs": {
+    "abbreviation": {
+      "name": "The Base Set",
+      "description": "Sweet dirty vanilla",
+      "official": true,
+      "white": [0, 1, 2, "indexes for every white card in this pack"],
+      "black": [0, 1, 2, "indexes for every black card in this pack"]
+    }
+  }
+}
