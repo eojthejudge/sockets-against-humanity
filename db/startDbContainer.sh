@@ -1,4 +1,4 @@
-docker run \
+docker start postgresql-container || docker run \
   -d \
   --name postgresql-container \
   -p 5432:5432 \
